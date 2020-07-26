@@ -1,0 +1,28 @@
+name: False when calendar not busy  
+on:  
+  push:  
+  pull_request:  
+    branches:  
+      - master  
+jobs:  
+  test:  
+    runs-on: ubuntu-latest  
+    name: test-action  
+    steps:  
+     - name: Get Non-Busy Calendar    
+       uses: Typeform/siesta@v1  
+       id: siesta  
+       with:  
+         google-credentials: ${{ secrets.siesta_google_credentials }}  
+         google-token: ${{ secrets.siesta_google_token }}  
+         google-calendar-id: ${{ secrets.siesta_google_calendar_id }}  
+     - name: Assert Result  
+        uses: therussiankid92/gat  
+        id: gat  
+        with:  
+          assertion: should.equal  
+          expected: false  
+          actual: ${{steps.siesta.outputs.calendar-busy}}
+#assertion: Mandatory, assertion to be performed (eg should.be.true, equals).
+#expected: Mandatory, the value outputed by your action/workflow. This shall be compared with the expected.
+#actual: Mandatory, the value you expect your function to have. This would be compared against your actual
